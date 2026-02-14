@@ -5,164 +5,181 @@
 <title>Stone AI Inspection</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', sans-serif;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-body {
-    background: radial-gradient(circle at 20% 30%, #1e293b, #0f172a 70%);
-    color: white;
-    min-height: 100vh;
+body{
+    font-family:'Inter',sans-serif;
+    background:radial-gradient(circle at 20% 30%, #1e293b, #0f172a 70%);
+    color:white;
+    min-height:100vh;
 }
 
-/* Top Bar */
-.topbar {
-    width: 100%;
-    padding: 15px 40px;
-    display: flex;
-    justify-content: space-between;
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(10px);
-    font-weight: 500;
+/* ===== TOP BAR ===== */
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    padding:18px 50px;
+    background:rgba(255,255,255,0.05);
+    backdrop-filter:blur(15px);
+    font-weight:500;
+    letter-spacing:1px;
 }
 
-/* Main Container */
-.container {
-    max-width: 1100px;
-    margin: 50px auto;
-    padding: 40px;
-    border-radius: 20px;
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(20px);
-    box-shadow: 0 0 60px rgba(0,0,0,0.4);
+/* ===== CONTAINER ===== */
+.container{
+    max-width:1150px;
+    margin:70px auto;
+    padding:50px;
+    border-radius:25px;
+    background:rgba(255,255,255,0.05);
+    backdrop-filter:blur(25px);
+    box-shadow:0 0 60px rgba(0,0,0,0.5);
 }
 
-/* Title */
-h1 {
-    text-align: center;
-    font-size: 32px;
-    margin-bottom: 10px;
+/* ===== TITLE ===== */
+.title{
+    text-align:center;
+    font-family:'Orbitron',sans-serif;
+    font-size:42px;
+    letter-spacing:3px;
+    margin-bottom:10px;
 }
 
-.subtitle {
-    text-align: center;
-    opacity: 0.7;
-    margin-bottom: 30px;
+.ai{
+    background:linear-gradient(90deg,#00c6ff,#0072ff);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    animation:glow 2.5s infinite ease-in-out;
 }
 
-/* Upload Section */
-.upload-section {
-    text-align: center;
-    margin-bottom: 25px;
+@keyframes glow{
+    0%{text-shadow:0 0 10px rgba(0,150,255,0.4);}
+    50%{text-shadow:0 0 30px rgba(0,150,255,1);}
+    100%{text-shadow:0 0 10px rgba(0,150,255,0.4);}
 }
 
-input[type="file"] {
-    padding: 8px;
-    border-radius: 8px;
+.subtitle{
+    text-align:center;
+    opacity:0.7;
+    margin-bottom:40px;
+    letter-spacing:1px;
 }
 
-button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    background: linear-gradient(90deg,#2563eb,#3b82f6);
-    color: white;
-    cursor: pointer;
-    margin-left: 10px;
-    transition: 0.3s;
+/* ===== UPLOAD ===== */
+.upload{
+    text-align:center;
+    margin-bottom:30px;
 }
 
-button:hover {
-    transform: scale(1.05);
+input[type="file"]{
+    padding:8px;
+    border-radius:8px;
 }
 
-/* Badge */
-.badge {
-    display: inline-block;
-    padding: 15px 25px;
-    border-radius: 50px;
-    margin-top: 15px;
-    font-size: 18px;
-    font-weight: 500;
+button{
+    padding:12px 25px;
+    border:none;
+    border-radius:8px;
+    background:linear-gradient(90deg,#2563eb,#3b82f6);
+    color:white;
+    font-weight:500;
+    cursor:pointer;
+    transition:0.3s;
 }
 
-.badge.success {
-    color: #00e676;
-    border: 1px solid #00e676;
-    box-shadow: 0 0 20px rgba(0,230,118,0.5);
+button:hover{
+    transform:translateY(-3px);
+    box-shadow:0 5px 25px rgba(37,99,235,0.5);
 }
 
-.badge.danger {
-    color: #ff5252;
-    border: 1px solid #ff5252;
-    box-shadow: 0 0 20px rgba(255,82,82,0.5);
+/* ===== BADGE ===== */
+.badge{
+    display:inline-block;
+    padding:18px 30px;
+    border-radius:50px;
+    margin-top:20px;
+    font-size:20px;
+    font-weight:500;
 }
 
-/* Progress Bar */
-.progress-container {
-    width: 300px;
-    height: 8px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 20px;
-    margin: 15px auto;
-    overflow: hidden;
+.success{
+    border:1px solid #00e676;
+    color:#00e676;
+    box-shadow:0 0 25px rgba(0,230,118,0.5);
 }
 
-.progress-bar {
-    height: 100%;
-    border-radius: 20px;
-    transition: width 1s ease;
+.danger{
+    border:1px solid #ff5252;
+    color:#ff5252;
+    box-shadow:0 0 25px rgba(255,82,82,0.5);
 }
 
-/* Image Grid */
-.image-grid {
-    display: flex;
-    gap: 40px;
-    justify-content: center;
-    margin-top: 30px;
-    flex-wrap: wrap;
+/* ===== PROGRESS ===== */
+.progress{
+    width:350px;
+    height:8px;
+    background:rgba(255,255,255,0.1);
+    margin:20px auto;
+    border-radius:20px;
+    overflow:hidden;
 }
 
-.image-box {
-    background: rgba(255,255,255,0.05);
-    padding: 20px;
-    border-radius: 15px;
-    text-align: center;
-    box-shadow: 0 0 30px rgba(0,0,0,0.4);
+.bar{
+    height:100%;
+    transition:width 1s ease;
 }
 
-.image-box img {
-    width: 350px;
-    border-radius: 10px;
-    transition: 0.4s;
+/* ===== IMAGES ===== */
+.image-grid{
+    display:flex;
+    gap:40px;
+    justify-content:center;
+    margin-top:40px;
+    flex-wrap:wrap;
 }
 
-.image-box img:hover {
-    transform: scale(1.05);
+.image-box{
+    background:rgba(255,255,255,0.05);
+    padding:25px;
+    border-radius:20px;
+    box-shadow:0 0 30px rgba(0,0,0,0.4);
 }
 
-/* Stats Panel */
-.stats-panel {
-    margin-top: 30px;
-    display: flex;
-    justify-content: space-around;
-    padding: 20px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 15px;
-    font-size: 14px;
-    opacity: 0.9;
+.image-box img{
+    width:360px;
+    border-radius:15px;
+    transition:0.4s;
 }
 
-/* Footer */
-.footer {
-    text-align: center;
-    margin-top: 40px;
-    opacity: 0.5;
-    font-size: 13px;
+.image-box img:hover{
+    transform:scale(1.05);
+}
+
+/* ===== STATS ===== */
+.stats{
+    margin-top:40px;
+    display:flex;
+    justify-content:space-around;
+    padding:20px;
+    background:rgba(255,255,255,0.05);
+    border-radius:20px;
+    font-size:14px;
+    opacity:0.85;
+}
+
+/* ===== FOOTER ===== */
+.footer{
+    text-align:center;
+    margin-top:50px;
+    opacity:0.5;
+    font-size:13px;
 }
 </style>
 </head>
@@ -170,15 +187,21 @@ button:hover {
 <body>
 
 <div class="topbar">
-    <div><b>Stone AI Inspection</b></div>
+    <div><b>Stone <span class="ai">AI</span> Inspection</b></div>
     <div>Industrial Quality Control System</div>
 </div>
 
 <div class="container">
-    <h1>Stone Defect Detection System</h1>
-    <div class="subtitle">ระบบตรวจสอบรอยแตกด้วยเทคโนโลยี AI</div>
 
-    <div class="upload-section">
+    <div class="title">
+        Stone Defect Detection <span class="ai">AI</span>
+    </div>
+
+    <div class="subtitle">
+        ระบบตรวจสอบคุณภาพของหินด้วยเทคโนโลยี AI
+    </div>
+
+    <div class="upload">
         <form method="POST" enctype="multipart/form-data">
             <input type="file" name="file" required>
             <button type="submit">ตรวจสอบคุณภาพ</button>
@@ -192,9 +215,9 @@ button:hover {
             ความมั่นใจ {{ confidence }}%
         </div>
 
-        <div class="progress-container">
-            <div class="progress-bar"
-                 style="width: {{ confidence }}%;
+        <div class="progress">
+            <div class="bar"
+                 style="width:{{ confidence }}%;
                  background:{% if crack %}#ff5252{% else %}#00e676{% endif %};">
             </div>
         </div>
@@ -218,17 +241,17 @@ button:hover {
     </div>
 
     {% if crack_count is defined %}
-    <div class="stats-panel">
+    <div class="stats">
         <div>🔍 จำนวนรอยแตก: {{ crack_count }}</div>
-        <div>🧠 Model Version: v1.0</div>
-        <div>⚡ Processing: Completed</div>
+        <div>⚡ Processing: {{ processing_time }}s</div>
         <div>📊 Accuracy: {{ confidence }}%</div>
     </div>
     {% endif %}
 
     <div class="footer">
-        © 2026 Stone AI Inspection System | Advanced Vision Technology
+        © 2026 Stone AI Inspection | Advanced Vision Technology
     </div>
+
 </div>
 
 <script>
