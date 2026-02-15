@@ -12,9 +12,36 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
+# ===============================
+# 🔍 ตรวจว่าเป็นหินหรือไม่
+# ===============================
+def is_stone(image):
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    # วัด texture ด้วย Laplacian variance
+    laplacian_var = cv2.Laplacian(gray, cv2.CV_64F).var()
+
+    # วัดความหนาแน่นของเส้นขอบ
+    edges = cv2.Canny(gray, 50, 150)
+    edge_density = np.sum(edges > 0) / (image.shape[0] * image.shape[1])
+
+    # threshold ปรับได้ถ้าอยากเข้มงวดขึ้น
+    if laplacian_var > 100 and edge_density > 0.02:
+        return True
+    else:
+        return False
+
+
+# ===============================
+# 🧠 ตรวจจับรอยแตก
+# ===============================
 def detect_cracks(image_path):
     image = cv2.imread(image_path)
     original = image.copy()
+
+    # 🔴 เช็คก่อนว่าเป็นหินไหม
+    if not is_stone(image):
+        return original, False, 0, 0, "NOT_STONE"
 
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(gray, (5, 5), 0)
@@ -47,15 +74,18 @@ def detect_cracks(image_path):
     image_area = image.shape[0] * image.shape[1]
 
     if crack_count == 0:
-        confidence = round(93 + np.random.uniform(2, 5), 2)
+        confidence = 85.0
         crack_detected = False
     else:
         confidence = min(99.9, round((total_area / image_area) * 7000, 2))
         crack_detected = True
 
-    return original, crack_detected, confidence, crack_count
+    return original, crack_detected, confidence, crack_count, "STONE"
 
 
+# ===============================
+# 🌐 Route หลัก
+# ===============================
 @app.route("/", methods=["GET", "POST"])
 def index():
     original_image = None
@@ -76,7 +106,7 @@ def index():
             file_path = os.path.join(app.config["UPLOAD_FOLDER"], unique_name)
             file.save(file_path)
 
-            output_image, crack, confidence, crack_count = detect_cracks(file_path)
+            output_image, crack, confidence, crack_count, stone_status = detect_cracks(file_path)
 
             result_name = "result_" + unique_name
             result_path = os.path.join(app.config["UPLOAD_FOLDER"], result_name)
@@ -87,10 +117,17 @@ def index():
 
             processing_time = round(time.time() - start_time, 2)
 
-            if crack:
-                result_text = f"พบรอยแตก {crack_count} จุด"
+            # 🔴 ถ้าไม่ใช่หิน
+            if stone_status == "NOT_STONE":
+                result_text = "❌ ไม่ใช่หิน"
+                crack = False
+                confidence = 0
+
             else:
-                result_text = "ไม่พบรอยแตก"
+                if crack:
+                    result_text = f"พบรอยแตก {crack_count} จุด"
+                else:
+                    result_text = "ไม่พบรอยแตก"
 
     return render_template(
         "index.html",
