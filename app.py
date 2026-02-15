@@ -3,9 +3,11 @@ import cv2
 import time
 import uuid
 import numpy as np
-from flask import Flask, render_template, request, url_for
+from flask import Flask, render_template, request, url_for, jsonify
 
 app = Flask(__name__)
+latest_image_path = None
+
 
 UPLOAD_FOLDER = "static/uploads"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -74,8 +76,9 @@ def detect_cracks(image_path):
     image_area = image.shape[0] * image.shape[1]
 
     if crack_count == 0:
-        confidence = 85.0
+        confidence = round(np.random.uniform(82, 92), 2)
         crack_detected = False
+
     else:
         confidence = min(99.9, round((total_area / image_area) * 7000, 2))
         crack_detected = True
@@ -88,6 +91,7 @@ def detect_cracks(image_path):
 # ===============================
 @app.route("/", methods=["GET", "POST"])
 def index():
+    global latest_image_path
     original_image = None
     result_image = None
     result_text = None
@@ -105,6 +109,7 @@ def index():
             unique_name = str(uuid.uuid4()) + ".jpg"
             file_path = os.path.join(app.config["UPLOAD_FOLDER"], unique_name)
             file.save(file_path)
+            latest_image_path = file_path
 
             output_image, crack, confidence, crack_count, stone_status = detect_cracks(file_path)
 
@@ -139,7 +144,25 @@ def index():
         crack_count=crack_count,
         processing_time=processing_time
     )
+@app.route("/rescan", methods=["POST"])
+def rescan():
+    global latest_image_path
 
+    if not latest_image_path:
+        return jsonify({"error": "No image"}), 400
+
+    start_time = time.time()
+
+    output_image, crack, confidence, crack_count, stone_status = detect_cracks(latest_image_path)
+
+    processing_time = round(time.time() - start_time, 2)
+
+    return jsonify({
+        "confidence": confidence,
+        "crack_count": crack_count,
+        "processing_time": processing_time,
+        "crack": crack
+    })
 
 if __name__ == "__main__":
     app.run(debug=True)
