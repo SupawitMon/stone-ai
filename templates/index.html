@@ -5,11 +5,18 @@
 <title>Stone AI Inspection</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
+/* ================= GLOBAL RESET ================= */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
+/* ================= COLOR SYSTEM ================= */
 :root{
     --bg:#0b1423;
     --card:rgba(255,255,255,0.05);
@@ -18,9 +25,10 @@
     --accent2:#00ffcc;
     --success:#00e676;
     --danger:#ff5252;
+    --warning:#ff9800;
 }
 
-/* ===== LIGHT MODE ===== */
+/* LIGHT MODE */
 body.light{
     --bg:#f4f7fb;
     --card:rgba(0,0,0,0.05);
@@ -29,8 +37,10 @@ body.light{
     --accent2:#06b6d4;
     --success:#16a34a;
     --danger:#dc2626;
+    --warning:#f59e0b;
 }
 
+/* ================= BODY ================= */
 body{
     font-family:'Inter',sans-serif;
     background:var(--bg);
@@ -40,7 +50,7 @@ body{
     overflow-x:hidden;
 }
 
-/* GRID BG */
+/* Animated Grid Background */
 body::before{
     content:"";
     position:fixed;
@@ -53,12 +63,13 @@ body::before{
     animation:moveGrid 25s linear infinite;
     z-index:-2;
 }
+
 @keyframes moveGrid{
     from{background-position:0 0;}
     to{background-position:120px 120px;}
 }
 
-/* TOPBAR */
+/* ================= TOPBAR ================= */
 .topbar{
     display:flex;
     justify-content:space-between;
@@ -80,7 +91,7 @@ body::before{
     color:white;
 }
 
-/* STATUS */
+/* Status Dot */
 .status{
     display:flex;
     align-items:center;
@@ -101,7 +112,7 @@ body::before{
     100%{opacity:0.5;}
 }
 
-/* CONTAINER */
+/* ================= MAIN CONTAINER ================= */
 .container{
     max-width:1100px;
     margin:70px auto;
@@ -112,35 +123,27 @@ body::before{
     box-shadow:0 0 40px rgba(0,255,255,0.05);
 }
 
-/* TITLE */
+/* ================= TITLE ================= */
 .title{
     text-align:center;
     font-family:'Orbitron',sans-serif;
     font-size:42px;
 }
+
 .ai{
-    background:linear-gradient(
-        270deg,
-        var(--accent1),
-        var(--accent2),
-        #8b5cf6,
-        var(--accent1)
-    );
+    background:linear-gradient(270deg,var(--accent1),var(--accent2),#8b5cf6,var(--accent1));
     background-size:600% 600%;
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
     animation:gradientFlow 6s ease infinite;
 }
 
-/* Animation ไล่สี */
 @keyframes gradientFlow{
     0%{background-position:0% 50%;}
     50%{background-position:100% 50%;}
     100%{background-position:0% 50%;}
 }
 
-
-/* ===== FIXED SUBTITLE CENTER ===== */
 .subtitle{
     text-align:center;
     margin:15px auto 35px auto;
@@ -149,7 +152,7 @@ body::before{
     max-width:700px;
 }
 
-/* BUTTON */
+/* ================= BUTTON ================= */
 button{
     padding:12px 25px;
     border:none;
@@ -164,17 +167,19 @@ button:hover{
     box-shadow:0 0 15px var(--accent1);
 }
 
-/* BADGE */
+/* ================= RESULT BADGE ================= */
 .badge{
     padding:20px 35px;
     border-radius:50px;
     margin-top:20px;
     display:inline-block;
+    font-weight:600;
 }
-.success{border:1px solid var(--success);color:var(--success);}
-.danger{border:1px solid var(--danger);}
+.success{ border:1px solid var(--success); color:var(--success);}
+.danger{ border:1px solid var(--danger); color:var(--danger);}
+.warning{ border:1px solid var(--warning); color:var(--warning);}
 
-/* PROGRESS */
+/* ================= PROGRESS BAR ================= */
 .progress{
     width:350px;
     height:8px;
@@ -190,7 +195,7 @@ button:hover{
     transition:width 1.5s ease;
 }
 
-/* IMAGES */
+/* ================= IMAGE SECTION ================= */
 .image-grid{
     display:flex;
     gap:40px;
@@ -203,27 +208,47 @@ button:hover{
     background:var(--card);
     padding:25px;
     border-radius:20px;
-    transition:0.3s;
     position:relative;
     overflow:hidden;
+    backdrop-filter:blur(10px);
+    transition:all 0.35s ease;
 }
 .image-box:hover{
-    transform:translateY(-8px);
-    box-shadow:0 0 25px rgba(0,255,255,0.15);
+    transform:translateY(-12px);
+    box-shadow:0 25px 45px rgba(0,0,0,0.25);
 }
 
 .image-box img{
     width:340px;
     border-radius:15px;
+    transition:transform 0.4s ease, box-shadow 0.4s ease;
+}
+.image-box:hover img{
+    transform:scale(1.06);
+    box-shadow:0 20px 40px rgba(0,255,255,0.25);
 }
 
-/* SCAN EFFECT */
+/* Glow Border */
+.image-box::before{
+    content:"";
+    position:absolute;
+    inset:-2px;
+    border-radius:22px;
+    background:linear-gradient(45deg,var(--accent1),var(--accent2));
+    opacity:0;
+    z-index:-1;
+    transition:opacity 0.4s ease;
+}
+.image-box:hover::before{
+    opacity:0.2;
+}
+
+/* ================= SCAN EFFECT ================= */
 .scan-overlay{
     position:absolute;
     inset:0;
     pointer-events:none;
 }
-
 .scan-line{
     position:absolute;
     width:100%;
@@ -233,24 +258,21 @@ button:hover{
     top:-10%;
     opacity:0;
 }
-
 @keyframes scanOnce{
-    0%{ top:-10%; opacity:1; }
-    90%{ opacity:1; }
-    100%{ top:110%; opacity:0; }
+    0%{ top:-10%; opacity:1;}
+    90%{ opacity:1;}
+    100%{ top:110%; opacity:0;}
 }
-
 .scan-active .scan-line{
     animation:scanOnce 1.5s ease forwards;
 }
 
-/* FLASH */
+/* Flash */
 .flash{
     position:absolute;
     inset:0;
     background:white;
     opacity:0;
-    pointer-events:none;
 }
 @keyframes flashEffect{
     0%{opacity:0;}
@@ -261,6 +283,7 @@ button:hover{
     animation:flashEffect 0.5s ease;
 }
 
+/* ================= FOOTER ================= */
 .footer{
     text-align:center;
     margin-top:50px;
@@ -272,107 +295,131 @@ button:hover{
 
 <body>
 
+<!-- ================= TOPBAR ================= -->
 <div class="topbar">
-<div><b>Stone <span class="ai">AI</span> Inspection</b></div>
-<div style="display:flex;gap:20px;align-items:center;">
-<div class="status"><div class="dot"></div> AI Online</div>
-<div class="theme-toggle" onclick="toggleTheme()">🌙 / ☀</div>
-</div>
+    <div><b>Stone <span class="ai">AI</span> Inspection</b></div>
+
+    <div style="display:flex;gap:20px;align-items:center;">
+        <div class="status">
+            <div class="dot"></div> AI Online
+        </div>
+        <div class="theme-toggle" onclick="toggleTheme()">🌙 / ☀</div>
+    </div>
 </div>
 
+<!-- ================= MAIN ================= -->
 <div class="container">
 
-<div class="title">
-Stone Defect Detection <span class="ai">AI</span>
-</div>
+    <div class="title">
+        Stone Defect Detection <span class="ai">AI</span>
+    </div>
 
-<div class="subtitle">
-ระบบตรวจสอบคุณภาพของหินด้วยเทคโนโลยี AI Vision
-</div>
+    <div class="subtitle">
+        ระบบตรวจสอบคุณภาพของหินด้วยเทคโนโลยี AI Vision
+    </div>
 
-<div style="text-align:center;">
-<form method="POST" enctype="multipart/form-data">
-<input type="file" name="file" required>
-<button type="submit">ตรวจสอบคุณภาพ</button>
-</form>
-</div>
+    <!-- Upload Form -->
+    <div style="text-align:center;">
+        <form method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" required>
+            <button type="submit">ตรวจสอบคุณภาพ</button>
+        </form>
+    </div>
 
+    <!-- RESULT SECTION -->
 {% if result_text %}
 <div style="text-align:center;">
-<div class="badge {% if crack %}danger{% else %}success{% endif %}">
-{{ result_text }} <br>
-ความมั่นใจ <span id="confidence">{{ confidence }}</span>%
-</div>
+    <div class="badge
+        {% if result_text == '❌ ไม่ใช่หิน' %} warning
+        {% elif crack %} danger
+        {% else %} success {% endif %}">
 
-<div class="progress">
-<div class="bar"
-id="progressBar"
-style="background:{% if crack %}var(--danger){% else %}var(--success){% endif %};">
-</div>
-</div>
+        {{ result_text }}
+
+        {% if result_text != '❌ ไม่ใช่หิน' %}
+        <br>
+        ความมั่นใจ <span id="confidence">{{ confidence }}</span>%
+        {% endif %}
+
+    </div>
+
+    {% if result_text != '❌ ไม่ใช่หิน' %}
+    <div class="progress">
+        <div class="bar" id="progressBar"
+            style="background:
+            {% if crack %} var(--danger)
+            {% else %} var(--success) {% endif %};">
+        </div>
+    </div>
+    {% endif %}
 </div>
 {% endif %}
 
-<div class="image-grid">
 
-{% if original_image %}
-<div class="image-box">
-<h3>ภาพต้นฉบับ</h3>
-<img src="{{ original_image }}">
-</div>
-{% endif %}
+    <!-- IMAGE SECTION -->
+    <div class="image-grid">
 
-{% if result_image %}
-<div class="image-box" id="resultBox">
-<h3>ผลการตรวจจับ</h3>
-<img id="resultImg" src="{{ result_image }}" style="filter:blur(5px);">
-<div class="scan-overlay">
-<div class="scan-line"></div>
-<div class="flash" id="flash"></div>
-</div>
-</div>
-{% endif %}
+        {% if original_image %}
+        <div class="image-box">
+            <h3>ภาพต้นฉบับ</h3>
+            <img src="{{ original_image }}">
+        </div>
+        {% endif %}
+
+        {% if result_image %}
+        <div class="image-box scan-active" id="resultBox">
+            <h3>ผลการตรวจจับ</h3>
+            <img id="resultImg" src="{{ result_image }}" style="filter:blur(5px);">
+            <div class="scan-overlay">
+                <div class="scan-line"></div>
+                <div class="flash" id="flash"></div>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+
+    <div class="footer">
+        © 2026 Stone AI Inspection | Advanced Vision Technology
+    </div>
 
 </div>
 
-<div class="footer">
-© 2026 Stone AI Inspection | Advanced Vision Technology
-</div>
-
-</div>
-
+<!-- ================= SCRIPT ================= -->
 <script>
+
 function toggleTheme(){
-document.body.classList.toggle("light");
-localStorage.setItem("theme",
-document.body.classList.contains("light")?"light":"dark");
+    document.body.classList.toggle("light");
+    localStorage.setItem(
+        "theme",
+        document.body.classList.contains("light") ? "light" : "dark"
+    );
 }
 
-window.onload=function(){
+window.onload = function(){
 
-if(localStorage.getItem("theme")==="light"){
-document.body.classList.add("light");
-}
+    if(localStorage.getItem("theme")==="light"){
+        document.body.classList.add("light");
+    }
 
-let bar=document.getElementById("progressBar");
-let conf=document.getElementById("confidence");
-let resultBox=document.getElementById("resultBox");
-let resultImg=document.getElementById("resultImg");
-let flash=document.getElementById("flash");
+    let bar = document.getElementById("progressBar");
+    let conf = document.getElementById("confidence");
+    let resultImg = document.getElementById("resultImg");
+    let flash = document.getElementById("flash");
 
-if(bar && conf){
-let target=parseFloat(conf.innerText);
-setTimeout(()=>{bar.style.width=target+"%";},300);
+    if(bar && conf){
+        let target = parseFloat(conf.innerText);
+        setTimeout(()=>{ bar.style.width = target+"%"; },300);
+    }
 
-if(resultBox){
-resultBox.classList.add("scan-active");
-setTimeout(()=>{
-resultImg.style.filter="blur(0px)";
-flash.classList.add("flash-active");
-},1400);
-}
-}
+    if(resultImg){
+        setTimeout(()=>{
+            resultImg.style.filter="blur(0px)";
+            flash.classList.add("flash-active");
+        },1400);
+    }
 };
+
 </script>
 
 </body>
