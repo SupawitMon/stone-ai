@@ -408,6 +408,35 @@ style="background:
 </div>
 
 <script>
+let animationTimers = {};
+
+function animateValue(id, start, end, duration) {
+
+    // เคลียร์ animation เก่า ถ้ามี
+    if(animationTimers[id]){
+        cancelAnimationFrame(animationTimers[id]);
+    }
+
+    const obj = document.getElementById(id);
+    const startTime = performance.now();
+
+    function update(currentTime){
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+
+        const value = start + (end - start) * progress;
+
+        obj.innerText = value.toFixed(2);  // รองรับทศนิยม
+
+        if(progress < 1){
+            animationTimers[id] = requestAnimationFrame(update);
+        }
+    }
+
+    animationTimers[id] = requestAnimationFrame(update);
+}
+
+
 function reScan(){
 
 fetch("/rescan", {method:"POST"})
@@ -417,7 +446,13 @@ fetch("/rescan", {method:"POST"})
   document.querySelector(".ai-card:nth-child(1) .ai-value").innerText = data.crack_count;
   document.querySelector(".ai-card:nth-child(2) .ai-value").innerText = data.processing_time + "s";
 
-  document.getElementById("confidence").innerText = data.confidence;
+  let currentTop = parseFloat(document.getElementById("confidence").innerText);
+  let currentBottom = parseFloat(document.getElementById("aiConfidenceValue").innerText);
+
+  animateValue("confidence", currentTop, data.confidence, 800);
+  animateValue("aiConfidenceValue", currentBottom, data.confidence, 800);
+
+
   document.getElementById("aiConfidenceValue").innerText = data.confidence + "%";
 
   let bar=document.getElementById("progressBar");
